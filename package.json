@@ -1,0 +1,28 @@
+{
+  "name": "guireact",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "format": "prettier --write \"app/**/*.js\" \"app/**/*.jsx\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "react": "19.2.0",
+    "react-reconciler": "0.33.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.4",
+    "@babel/preset-react": "^7.27.1",
+    "esbuild": "^0.25.11",
+    "prettier": "^3.6.2"
+  }
+}
