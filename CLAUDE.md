@@ -11,6 +11,18 @@ When modifying the project structure, build system, architecture, or implementat
 
 Always update CLAUDE.md as part of your work - do not defer documentation updates.
 
+## IMPORTANT: Development Workflow
+
+**⚠️ DO NOT COMMIT CODE BEFORE USER REVIEW AND TESTING**
+
+When implementing changes:
+1. Write and test the code
+2. Wait for the user to review the changes
+3. Wait for the user to test the implementation
+4. Only commit after explicit user approval
+
+Never commit code immediately after implementation. The user must review and test first.
+
 ## Project Overview
 
 This project implements a custom React reconciler that renders to DearImGUI using Static Hermes. The goal is to use React's declarative component model and JSX syntax to describe ImGUI interfaces, while learning how React works internally.

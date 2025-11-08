@@ -103,6 +103,15 @@ static uint64_t s_start_time = 0;
 static uint64_t s_last_fps_time = 0;
 static double s_fps = 0;
 
+// Performance metrics
+static double s_react_avg_ms = 0;              // React reconciliation average (accumulated)
+static double s_react_max_ms = 0;              // React reconciliation max (accumulated)
+static double s_imgui_avg_ms = 0;              // ImGui render average (EMA, accumulated)
+static double s_react_avg_ms_display = 0;      // React avg (displayed, updated once/sec)
+static double s_react_max_ms_display = 0;      // React max (displayed, updated once/sec)
+static double s_imgui_avg_ms_display = 0;      // ImGui render average (displayed, updated once/sec)
+
+
 extern "C" int load_image(const char *path) {
   s_images.emplace_back(std::make_unique<Image>(path));
   return s_images.size() - 1;
@@ -192,6 +201,34 @@ static void app_event(const sapp_event *ev) {
 static float s_bg_color[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 extern "C" float *get_bg_color() { return s_bg_color; }
 
+static void update_performance_metrics() {
+  // Read performance metrics from JavaScript
+  try {
+    auto global = s_hermesApp->hermes->global();
+
+    if (global.hasProperty(*s_hermesApp->hermes, "perfMetrics")) {
+      auto metrics = global.getPropertyAsObject(*s_hermesApp->hermes, "perfMetrics");
+
+      // Read React reconciliation stats (calculated in JS)
+      if (metrics.hasProperty(*s_hermesApp->hermes, "reconciliationAvg")) {
+        s_react_avg_ms = metrics.getProperty(*s_hermesApp->hermes, "reconciliationAvg").asNumber();
+      }
+      if (metrics.hasProperty(*s_hermesApp->hermes, "reconciliationMax")) {
+        s_react_max_ms = metrics.getProperty(*s_hermesApp->hermes, "reconciliationMax").asNumber();
+      }
+
+      // Read and calculate EMA for ImGui render time (every frame)
+      if (metrics.hasProperty(*s_hermesApp->hermes, "renderTime")) {
+        double renderTime = metrics.getProperty(*s_hermesApp->hermes, "renderTime").asNumber();
+        const double alpha = 0.1;  // Smoothing factor
+        s_imgui_avg_ms = s_imgui_avg_ms * (1.0 - alpha) + renderTime * alpha;
+      }
+    }
+  } catch (...) {
+    // Ignore errors reading metrics
+  }
+}
+
 static void app_frame() {
   uint64_t now = stm_now();
   double curTimeMs = stm_ms(now);
@@ -201,10 +238,13 @@ static void app_frame() {
     s_start_time = now;
     s_last_fps_time = now;
   } else {
-    // Update FPS every second
+    // Update FPS and displayed performance metrics every second
     uint64_t diff = stm_diff(now, s_last_fps_time);
     if (diff > 1000000000) {
-      s_fps = 1.0 / sapp_frame_duration(); // stm_sec(diff);
+      s_fps = 1.0 / sapp_frame_duration();
+      s_imgui_avg_ms_display = s_imgui_avg_ms;  // Update displayed value
+      s_react_avg_ms_display = s_react_avg_ms;  // Update displayed value
+      s_react_max_ms_display = s_react_max_ms;  // Update displayed value
       s_last_fps_time = now;
     }
   }
@@ -247,9 +287,24 @@ static void app_frame() {
     slog_func("ERROR", 1, 0, e.what(), __LINE__, __FILE__, nullptr);
   }
 
+  update_performance_metrics();
+
   simgui_render();
   sdtx_canvas((float)sapp_width(), (float)sapp_height());
-  sdtx_printf("FPS: %d", (int)(s_fps + 0.5));
+
+  // Position at bottom-left corner
+  // Each character is 8x8 pixels, calculate rows from bottom
+  int num_rows = (int)sapp_height() / 8;
+  int num_lines = s_react_avg_ms_display > 0 ? 3 : 2;  // FPS + ImGui [+ React]
+  sdtx_pos(0.0f, (float)(num_rows - num_lines));
+
+  sdtx_printf("FPS: %d\n", (int)(s_fps + 0.5));
+  sdtx_printf("ImGui: %dus\n", (int)(s_imgui_avg_ms_display * 1000.0 + 0.5));
+  if (s_react_avg_ms_display > 0) {
+    sdtx_printf("React: %d/%dus",
+                (int)(s_react_avg_ms_display * 1000.0 + 0.5),
+                (int)(s_react_max_ms_display * 1000.0 + 0.5));
+  }
   sdtx_draw();
   sg_end_pass();
   sg_commit();
