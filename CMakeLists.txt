@@ -31,10 +31,14 @@ if(NOT DEFINED REACT_BUNDLE_MODE)
 endif()
 set(REACT_BUNDLE_MODE ${REACT_BUNDLE_MODE} CACHE STRING "React bundle compilation mode (0=native, 1=bytecode, 2=source)")
 
+# React Compiler: Optional optimization feature (OFF by default)
+option(USE_REACT_COMPILER "Enable React Compiler for automatic memoization optimizations" OFF)
+
 message(STATUS "Hermes build: ${HERMES_BUILD}")
 message(STATUS "Hermes source: ${HERMES_SRC}")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "React bundle mode: ${REACT_BUNDLE_MODE} (0=native, 1=bytecode, 2=source)")
+message(STATUS "React Compiler: ${USE_REACT_COMPILER}")
 
 # Collect reconciler library files for dependency tracking
 # This is defined at root level so it can be reused by multiple apps

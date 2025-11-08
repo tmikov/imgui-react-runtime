@@ -62,6 +62,7 @@ _**Note**: This project is an independent experiment and is not affiliated with,
   - Lightning-fast startup - no parsing, no JIT warmup, just native code execution
   - Single executable distribution
 - ✅ **React 19.2.0** with custom reconciler
+- ✅ **React Compiler support** - Optional automatic memoization optimization
 - ✅ **Static Hermes** with zero-overhead FFI to Dear ImGui
 - ✅ **Event loop** with `setTimeout`, `setImmediate`, and Promise support
 - ✅ **React hooks** (`useState`, `useEffect`, etc.)
@@ -993,6 +994,21 @@ Override the mode explicitly:
 ```bash
 cmake -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DREACT_BUNDLE_MODE=1
 ```
+
+### React Compiler (Optional)
+
+React Compiler is an optional build feature that automatically adds memoization to React components. It's disabled by default and can be enabled via CMake:
+
+```bash
+cmake -B build -DUSE_REACT_COMPILER=ON
+cmake --build build
+```
+
+**How it works:**
+- Uses a two-pass build: Babel preprocessing → esbuild bundling
+- Babel transforms React components to add `useMemoCache` calls
+- Components skip re-renders when props/state haven't changed
+- Works with all compilation modes (native/bytecode/source)
 
 ### Hermes Build Integration
 

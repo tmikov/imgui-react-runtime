@@ -80,6 +80,7 @@ function(add_react_imgui_app)
         ${RECONCILER_FILES}
         ${APP_FILES}
         ${CMAKE_SOURCE_DIR}/scripts/bundle-react-unit.js
+        ${CMAKE_SOURCE_DIR}/.babelrc.cjs
     )
     if(ARG_ADDITIONAL_JS_DEPS)
         list(APPEND REACT_UNIT_DEPS ${ARG_ADDITIONAL_JS_DEPS})
@@ -87,13 +88,15 @@ function(add_react_imgui_app)
 
     # Bundle with esbuild
     add_custom_command(OUTPUT ${REACT_UNIT_BUNDLE}
-        COMMAND node ${CMAKE_SOURCE_DIR}/scripts/bundle-react-unit.js
+        COMMAND ${CMAKE_COMMAND} -E env
+            USE_REACT_COMPILER=$<IF:$<BOOL:${USE_REACT_COMPILER}>,true,false>
+            node ${CMAKE_SOURCE_DIR}/scripts/bundle-react-unit.js
             ${ARG_ENTRY_POINT}
             ${REACT_UNIT_BUNDLE}
             $<IF:$<CONFIG:Debug>,development,production>
         DEPENDS ${REACT_UNIT_DEPS}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMENT "Bundling ${ARG_TARGET} React unit with esbuild (NODE_ENV=$<IF:$<CONFIG:Debug>,development,production>)"
+        COMMENT "Bundling ${ARG_TARGET} React unit with esbuild (NODE_ENV=$<IF:$<CONFIG:Debug>,development,production>, React Compiler=${USE_REACT_COMPILER})"
     )
 
     # Compile based on REACT_BUNDLE_MODE
