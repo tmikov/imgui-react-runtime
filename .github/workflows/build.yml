@@ -1,0 +1,113 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  HERMES_VERSION: 80359d48dbf0a108031d69c8a22bad180cfb4df3
+
+jobs:
+  build:
+    name: ${{ matrix.os }} (${{ matrix.build_type }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build_type: [Debug, Release]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Ubuntu dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-dev \
+            libxi-dev \
+            libxcursor-dev \
+            libgl1-mesa-dev \
+            libicu-dev \
+            clang \
+            cmake \
+            ninja-build \
+            nodejs \
+            npm
+
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: |
+          brew install cmake ninja node
+
+      - name: Cache Hermes build
+        id: hermes-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            hermes-src
+            hermes-build
+          key: ${{ runner.os }}-hermes-${{ env.HERMES_VERSION }}
+
+      - name: Build Hermes (if not cached)
+        if: steps.hermes-cache.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/facebook/hermes.git hermes-src
+          cd hermes-src
+          git checkout ${{ env.HERMES_VERSION }}
+          # Remove .git directory immediately to save ~100MB in cache
+          rm -rf .git
+          cd ..
+          cmake -S hermes-src -B hermes-build -DCMAKE_BUILD_TYPE=Release -G Ninja
+          cmake --build hermes-build --config Release
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Configure project (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_C_COMPILER=clang \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DHERMES_BUILD_DIR=${{ github.workspace }}/hermes-build \
+            -G Ninja
+
+      - name: Configure project (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DHERMES_BUILD_DIR=${{ github.workspace }}/hermes-build \
+            -G Ninja
+
+      - name: Build project
+        run: cmake --build build
+
+      - name: Upload showcase executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: showcase-${{ matrix.os }}-${{ matrix.build_type }}
+          path: build/examples/showcase/showcase${{ runner.os == 'Windows' && '.exe' || '' }}
+          if-no-files-found: error
+
+      - name: Upload hello executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello-${{ matrix.os }}-${{ matrix.build_type }}
+          path: build/examples/hello/hello${{ runner.os == 'Windows' && '.exe' || '' }}
+          if-no-files-found: error
+
+      - name: Upload dynamic-windows executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: dynamic-windows-${{ matrix.os }}-${{ matrix.build_type }}
+          path: build/examples/dynamic-windows/dynamic-windows${{ runner.os == 'Windows' && '.exe' || '' }}
+          if-no-files-found: error
