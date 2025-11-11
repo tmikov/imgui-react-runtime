@@ -120,7 +120,9 @@ You'll need:
   - Linux: `apt-get install ninja-build` or `yum install ninja-build`
 - **Graphics libraries** - Required for Sokol (window management and OpenGL rendering)
   - macOS: (no additional packages needed)
-  - Linux: `apt-get install libx11-dev libxi-dev libxcursor-dev libgl1-mesa-dev libicu-dev`
+  - Linux:
+    - Apt: `apt-get install libx11-dev libxi-dev libxcursor-dev libgl1-mesa-dev libicu-dev`
+    - Yum: `yum install libX11-devel libXi-devel libXcursor-devel mesa-libGL-devel libicu-devel`
 
 **That's it!** The project has **no other dependencies**. The CMake build process automatically downloads and builds Static Hermes on first configure.
 
