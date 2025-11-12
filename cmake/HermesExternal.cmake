@@ -107,6 +107,8 @@ else()
         LOG_BUILD ON
         LOG_OUTPUT_ON_FAILURE ON
         UPDATE_DISCONNECTED ON
+        ENV CC ${CMAKE_C_COMPILER}
+        ENV CXX ${CMAKE_CXX_COMPILER}
     )
 
     # Set tool paths (these will be valid after Hermes is built)
