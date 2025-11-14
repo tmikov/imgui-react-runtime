@@ -775,11 +775,11 @@ While you can compose existing React components together, Dear ImGui's real powe
 **How custom widgets work:**
 
 1. **Add a render function** in [`lib/imgui-unit/renderer.js`](lib/imgui-unit/renderer.js) that uses ImGui's draw list API
-2. **Add a case** to the switch statement in `renderNode()`
+2. **Add a case** to the switch statement in [`renderNode()`](a86e558b6ea712179d955f04a6ec17493b18953a/lib/imgui-unit/renderer.js#L785)
 3. **Use `_igDummy()`** to reserve layout space for your custom drawing
 4. **Handle mouse interaction** using `_igGetMousePos()` and `_igIsMouseClicked_Bool()`
 
-**Example: RadialMenu** ([`lib/imgui-unit/renderer.js:607-752`](lib/imgui-unit/renderer.js#L607-L752))
+**Example: RadialMenu** ([`lib/imgui-unit/renderer.js:607-752`](a86e558b6ea712179d955f04a6ec17493b18953a/lib/imgui-unit/renderer.js#L607-L752)
 
 ```javascript
 function renderRadialMenu(node: any, vec2: c_ptr): void {
