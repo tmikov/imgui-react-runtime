@@ -1028,7 +1028,14 @@ Hermes is **automatically** cloned and built as part of the CMake configurationâ
   ```bash
   cmake -B build -DHERMES_GIT_TAG=abc123def
   ```
-- **Always Release mode**: Hermes always builds in Release for optimal performance
+- **Build type**: Set via `HERMES_BUILD_TYPE` (default: Release)
+  ```bash
+  # Build Hermes in Debug mode (useful for debugging shermes crashes)
+  cmake -B build -DHERMES_BUILD_TYPE=Debug
+
+  # Or RelWithDebInfo (optimized but with debug symbols)
+  cmake -B build -DHERMES_BUILD_TYPE=RelWithDebInfo
+  ```
 - **Per-config isolation**: Debug and Release builds get separate Hermes clones
 
 ### Building the Project

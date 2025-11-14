@@ -77,14 +77,20 @@ else()
         CACHE STRING "Hermes git repository URL")
     set(HERMES_GIT_TAG "80359d48dbf0a108031d69c8a22bad180cfb4df3"
         CACHE STRING "Hermes git tag/commit/branch to build")
+    set(HERMES_BUILD_TYPE "Release"
+        CACHE STRING "Hermes build type (Release, Debug, RelWithDebInfo, MinSizeRel)")
 
     # Set Hermes paths - everything in build directory
     set(HERMES_SRC "${CMAKE_BINARY_DIR}/hermes-src")
     set(HERMES_BUILD "${CMAKE_BINARY_DIR}/hermes")
 
+    message(STATUS "Hermes git URL: ${HERMES_GIT_URL}")
+    message(STATUS "Hermes git tag: ${HERMES_GIT_TAG}")
+    message(STATUS "Hermes build type: ${HERMES_BUILD_TYPE}")
+
     # Configure Hermes build options
     set(HERMES_CMAKE_ARGS
-        -DCMAKE_BUILD_TYPE=Release
+        -DCMAKE_BUILD_TYPE=${HERMES_BUILD_TYPE}
         -DHERMES_ENABLE_TEST_SUITE=OFF
         -DHERMES_BUILD_APPLE_FRAMEWORK=OFF
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
