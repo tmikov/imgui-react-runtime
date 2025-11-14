@@ -74,6 +74,7 @@ function(hermes_compile_native)
         $<$<CONFIG:Debug>:-g3>
         --exported-unit=${ARG_UNIT_NAME}
         -Xes6-block-scoping
+        -Xline-directives
     )
     if(ARG_FLAGS)
         list(APPEND COMPILER_FLAGS ${ARG_FLAGS})
