@@ -6,3 +6,4 @@
 add_subdirectory(hello)
 add_subdirectory(dynamic-windows)
 add_subdirectory(showcase)
+add_subdirectory(custom-widget)
