@@ -3,7 +3,7 @@
 // See LICENSE file for full license text
 
 // Bouncing ball component - demonstrates custom drawing with rect and circle
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export function BouncingBall() {
   // Content dimensions
@@ -20,18 +20,22 @@ export function BouncingBall() {
   const speed = 5.0;
   const angle = Math.random() * 2 * Math.PI;
 
-  const [velocityX, setVelocityX] = useState(Math.cos(angle) * speed);
-  const [velocityY, setVelocityY] = useState(Math.sin(angle) * speed);
+  const vx = useRef(Math.cos(angle) * speed);
+  const vy = useRef(Math.sin(angle) * speed);
 
-  // Update ball position every 16ms (~60fps)
+  // Update ball position every animation frame
   useEffect(() => {
-    const interval = setInterval(() => {
+    let time = performance.now();
+    function render(t) {
+      const dt = (t - time) / 10;
+      time = t;
+      
       setBallX(prevX => {
-        let newX = prevX + velocityX;
+        let newX = prevX + vx.current * dt;
 
         // Bounce off left/right walls
         if (newX - ballRadius <= borderThickness || newX + ballRadius >= contentWidth - borderThickness) {
-          setVelocityX(prev => -prev);
+          vx.current = -vx.current;
           // Clamp position to stay within bounds
           newX = newX - ballRadius <= borderThickness
             ? borderThickness + ballRadius
@@ -42,11 +46,11 @@ export function BouncingBall() {
       });
 
       setBallY(prevY => {
-        let newY = prevY + velocityY;
+        let newY = prevY + vy.current * dt;
 
         // Bounce off top/bottom walls
         if (newY - ballRadius <= borderThickness || newY + ballRadius >= contentHeight - borderThickness) {
-          setVelocityY(prev => -prev);
+          vy.current = -vy.current;
           // Clamp position to stay within bounds
           newY = newY - ballRadius <= borderThickness
             ? borderThickness + ballRadius
@@ -55,10 +59,13 @@ export function BouncingBall() {
 
         return newY;
       });
-    }, 16);
 
-    return () => clearInterval(interval);
-  }, [velocityX, velocityY]);
+      // Request next frame
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  }, []);
 
   return (
     <window title="Bouncing Ball" defaultX={600} defaultY={350} flags={64}>
