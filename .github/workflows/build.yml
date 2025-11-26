@@ -53,7 +53,7 @@ jobs:
           path: |
             hermes-src
             hermes-build
-          key: ${{ runner.os }}-hermes-${{ env.HERMES_VERSION }}
+          key: ${{ runner.os }}-hermes-${{ env.HERMES_VERSION }}-clang
 
       - name: Build Hermes (if not cached)
         if: steps.hermes-cache.outputs.cache-hit != 'true'
@@ -64,7 +64,11 @@ jobs:
           # Remove .git directory immediately to save ~100MB in cache
           rm -rf .git
           cd ..
-          cmake -S hermes-src -B hermes-build -DCMAKE_BUILD_TYPE=Release -G Ninja
+          cmake -S hermes-src -B hermes-build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER=clang \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -G Ninja
           cmake --build hermes-build --config Release
 
       - name: Install npm dependencies
