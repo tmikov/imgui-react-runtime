@@ -7,7 +7,7 @@
     "doc": "doc"
   },
   "scripts": {
-    "format": "prettier --write \"app/**/*.js\" \"app/**/*.jsx\"",
+    "format": "prettier --write \"examples/**/*.{js,jsx}\" \"lib/jslib-unit/**/*.js\" \"lib/react-imgui-reconciler/**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
