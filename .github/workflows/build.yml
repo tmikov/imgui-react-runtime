@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  HERMES_VERSION: 80359d48dbf0a108031d69c8a22bad180cfb4df3
+  HERMES_VERSION: e595577844507abb72cbfde4467fdb4a66bf2e10
 
 jobs:
   build:

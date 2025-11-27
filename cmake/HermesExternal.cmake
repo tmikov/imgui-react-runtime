@@ -75,7 +75,7 @@ else()
     # Configurable git parameters
     set(HERMES_GIT_URL "https://github.com/facebook/hermes.git"
         CACHE STRING "Hermes git repository URL")
-    set(HERMES_GIT_TAG "80359d48dbf0a108031d69c8a22bad180cfb4df3"
+    set(HERMES_GIT_TAG "e595577844507abb72cbfde4467fdb4a66bf2e10"
         CACHE STRING "Hermes git tag/commit/branch to build")
     set(HERMES_BUILD_TYPE "Release"
         CACHE STRING "Hermes build type (Release, Debug, RelWithDebInfo, MinSizeRel)")
