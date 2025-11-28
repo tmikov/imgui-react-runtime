@@ -26,6 +26,7 @@ export function BouncingBall() {
   // Update ball position every animation frame
   useEffect(() => {
     let time = performance.now();
+    let rafId;
     function render(t) {
       const dt = (t - time) / 10;
       time = t;
@@ -69,10 +70,11 @@ export function BouncingBall() {
       });
 
       // Request next frame
-      requestAnimationFrame(render);
+      rafId = requestAnimationFrame(render);
     }
 
-    requestAnimationFrame(render);
+    rafId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   return (
