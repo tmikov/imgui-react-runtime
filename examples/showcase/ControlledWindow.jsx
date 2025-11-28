@@ -11,24 +11,24 @@ export function ControlledWindow() {
     x: 300,
     y: 300,
     width: 350,
-    height: 250
+    height: 250,
   });
 
   const snapToOrigin = () => {
-    setWindowState(prev => ({ ...prev, x: 20, y: 20 }));
+    setWindowState((prev) => ({ ...prev, x: 20, y: 20 }));
   };
 
   const snapToCenter = () => {
     // Approximate screen center
-    setWindowState(prev => ({ ...prev, x: 400, y: 300 }));
+    setWindowState((prev) => ({ ...prev, x: 400, y: 300 }));
   };
 
   const makeWide = () => {
-    setWindowState(prev => ({ ...prev, width: 600, height: 250 }));
+    setWindowState((prev) => ({ ...prev, width: 600, height: 250 }));
   };
 
   const makeTall = () => {
-    setWindowState(prev => ({ ...prev, width: 350, height: 400 }));
+    setWindowState((prev) => ({ ...prev, width: 350, height: 400 }));
   };
 
   return (
@@ -49,8 +49,13 @@ export function ControlledWindow() {
 
       <text color="#00FFFF">Current State:</text>
       <indent>
-        <text>Position: ({Math.round(windowState.x)}, {Math.round(windowState.y)})</text>
-        <text>Size: {Math.round(windowState.width)} x {Math.round(windowState.height)}</text>
+        <text>
+          Position: ({Math.round(windowState.x)}, {Math.round(windowState.y)})
+        </text>
+        <text>
+          Size: {Math.round(windowState.width)} x{' '}
+          {Math.round(windowState.height)}
+        </text>
       </indent>
 
       <separator />
@@ -70,12 +75,14 @@ export function ControlledWindow() {
 
       <collapsingheader title="How This Works">
         <text wrapped>
-          This window uses x, y, width, and height props (not defaultX/defaultY).
-          These props are enforced every frame using ImGuiCond_Always.
+          This window uses x, y, width, and height props (not
+          defaultX/defaultY). These props are enforced every frame using
+          ImGuiCond_Always.
         </text>
         <text wrapped>
-          When you move or resize the window, onWindowState fires with new values.
-          We update React state, which updates the props, completing the cycle.
+          When you move or resize the window, onWindowState fires with new
+          values. We update React state, which updates the props, completing the
+          cycle.
         </text>
         <text wrapped>
           The buttons demonstrate programmatic control: just update state!

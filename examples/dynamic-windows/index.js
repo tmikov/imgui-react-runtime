@@ -7,7 +7,7 @@ import { createRoot, render } from 'react-imgui-reconciler/reconciler.js';
 import { App } from './app.jsx';
 
 // Configure window
-globalThis.sappConfig.title = "Dynamic Windows Demo";
+globalThis.sappConfig.title = 'Dynamic Windows Demo';
 
 // Create React root with fiber root and container
 const root = createRoot();
@@ -20,7 +20,7 @@ globalThis.reactApp = {
   // Note: resetAfterCommit in host-config.js will sync rootChildren after each render
   render() {
     render(React.createElement(App), root);
-  }
+  },
 };
 
 // Initial render

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const ACTIONS = ["Cut", "Copy", "Paste", "Delete", "Save"];
+const ACTIONS = ['Cut', 'Copy', 'Paste', 'Delete', 'Save'];
 
 export function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,14 +12,20 @@ export function App() {
   };
 
   return (
-    <window title="Custom Widget Example" defaultWidth={600} defaultHeight={400}>
+    <window
+      title="Custom Widget Example"
+      defaultWidth={600}
+      defaultHeight={400}
+    >
       <text>This example demonstrates creating custom ImGui widgets.</text>
-      <text>The RadialMenu is a custom widget built using ImGui's draw list API.</text>
+      <text>
+        The RadialMenu is a custom widget built using ImGui's draw list API.
+      </text>
       <separator />
 
       <text>Click the button to open the radial menu:</text>
       <button onClick={() => setMenuOpen(!menuOpen)}>
-        {menuOpen ? "Close Menu" : "Open Radial Menu"}
+        {menuOpen ? 'Close Menu' : 'Open Radial Menu'}
       </button>
 
       {menuOpen && (

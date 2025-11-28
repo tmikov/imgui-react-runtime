@@ -9,7 +9,7 @@ import { App } from './app.jsx';
 // Configure window (optional - defaults are provided)
 // globalThis.sappConfig is created by imgui-unit with { title: "imgui-react-runtime" }
 // Applications can override properties here before rendering
-globalThis.sappConfig.title = "Hello World";
+globalThis.sappConfig.title = 'Hello World';
 globalThis.sappConfig.width = 320;
 globalThis.sappConfig.height = 200;
 
@@ -24,7 +24,7 @@ globalThis.reactApp = {
   // Note: resetAfterCommit in host-config.js will sync rootChildren after each render
   render() {
     render(React.createElement(App), root);
-  }
+  },
 };
 
 // Initial render

@@ -29,32 +29,40 @@ export function BouncingBall() {
     function render(t) {
       const dt = (t - time) / 10;
       time = t;
-      
-      setBallX(prevX => {
+
+      setBallX((prevX) => {
         let newX = prevX + vx.current * dt;
 
         // Bounce off left/right walls
-        if (newX - ballRadius <= borderThickness || newX + ballRadius >= contentWidth - borderThickness) {
+        if (
+          newX - ballRadius <= borderThickness ||
+          newX + ballRadius >= contentWidth - borderThickness
+        ) {
           vx.current = -vx.current;
           // Clamp position to stay within bounds
-          newX = newX - ballRadius <= borderThickness
-            ? borderThickness + ballRadius
-            : contentWidth - borderThickness - ballRadius;
+          newX =
+            newX - ballRadius <= borderThickness
+              ? borderThickness + ballRadius
+              : contentWidth - borderThickness - ballRadius;
         }
 
         return newX;
       });
 
-      setBallY(prevY => {
+      setBallY((prevY) => {
         let newY = prevY + vy.current * dt;
 
         // Bounce off top/bottom walls
-        if (newY - ballRadius <= borderThickness || newY + ballRadius >= contentHeight - borderThickness) {
+        if (
+          newY - ballRadius <= borderThickness ||
+          newY + ballRadius >= contentHeight - borderThickness
+        ) {
           vy.current = -vy.current;
           // Clamp position to stay within bounds
-          newY = newY - ballRadius <= borderThickness
-            ? borderThickness + ballRadius
-            : contentHeight - borderThickness - ballRadius;
+          newY =
+            newY - ballRadius <= borderThickness
+              ? borderThickness + ballRadius
+              : contentHeight - borderThickness - ballRadius;
         }
 
         return newY;
@@ -72,13 +80,47 @@ export function BouncingBall() {
       {/* flags=64 is ImGuiWindowFlags_AlwaysAutoResize */}
       <child width={contentWidth} height={contentHeight} noPadding noScrollbar>
         {/* White borders - top, left, bottom, right */}
-        <rect x={0} y={0} width={contentWidth} height={borderThickness} color="#FFFFFF" filled />
-        <rect x={0} y={0} width={borderThickness} height={contentHeight} color="#FFFFFF" filled />
-        <rect x={0} y={contentHeight - borderThickness} width={contentWidth} height={borderThickness} color="#FFFFFF" filled />
-        <rect x={contentWidth - borderThickness} y={0} width={borderThickness} height={contentHeight} color="#FFFFFF" filled />
+        <rect
+          x={0}
+          y={0}
+          width={contentWidth}
+          height={borderThickness}
+          color="#FFFFFF"
+          filled
+        />
+        <rect
+          x={0}
+          y={0}
+          width={borderThickness}
+          height={contentHeight}
+          color="#FFFFFF"
+          filled
+        />
+        <rect
+          x={0}
+          y={contentHeight - borderThickness}
+          width={contentWidth}
+          height={borderThickness}
+          color="#FFFFFF"
+          filled
+        />
+        <rect
+          x={contentWidth - borderThickness}
+          y={0}
+          width={borderThickness}
+          height={contentHeight}
+          color="#FFFFFF"
+          filled
+        />
 
         {/* Green bouncing ball */}
-        <circle x={ballX} y={ballY} radius={ballRadius} color="#00FF00" filled />
+        <circle
+          x={ballX}
+          y={ballY}
+          radius={ballRadius}
+          color="#00FF00"
+          filled
+        />
       </child>
     </window>
   );

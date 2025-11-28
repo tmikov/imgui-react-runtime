@@ -1,6 +1,6 @@
-import React from "react";
-import { createRoot, render } from "react-imgui-reconciler/reconciler.js";
-import { App } from "./app.jsx";
+import React from 'react';
+import { createRoot, render } from 'react-imgui-reconciler/reconciler.js';
+import { App } from './app.jsx';
 
 // Create React root with fiber root and container
 const root = createRoot();
@@ -12,7 +12,7 @@ globalThis.reactApp = {
   // Render the app
   render() {
     render(React.createElement(App), root);
-  }
+  },
 };
 
 // Initial render
