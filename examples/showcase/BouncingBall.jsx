@@ -3,7 +3,7 @@
 // See LICENSE file for full license text
 
 // Bouncing ball component - demonstrates custom drawing with rect and circle
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export function BouncingBall() {
   // Content dimensions
@@ -16,15 +16,14 @@ export function BouncingBall() {
   const [ballX, setBallX] = useState(200);
   const [ballY, setBallY] = useState(150);
 
-  // Initialize velocity with random angle (use single angle for both components)
-  const speed = 5.0;
-  const angle = Math.random() * 2 * Math.PI;
-
-  const vx = useRef(Math.cos(angle) * speed);
-  const vy = useRef(Math.sin(angle) * speed);
-
   // Update ball position every animation frame
   useEffect(() => {
+    // Initialize velocity with random angle
+    const speed = 5.0;
+    const angle = Math.random() * 2 * Math.PI;
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed;
+
     let time = performance.now();
     let rafId;
     function render(t) {
@@ -32,14 +31,14 @@ export function BouncingBall() {
       time = t;
 
       setBallX((prevX) => {
-        let newX = prevX + vx.current * dt;
+        let newX = prevX + vx * dt;
 
         // Bounce off left/right walls
         if (
           newX - ballRadius <= borderThickness ||
           newX + ballRadius >= contentWidth - borderThickness
         ) {
-          vx.current = -vx.current;
+          vx = -vx;
           // Clamp position to stay within bounds
           newX =
             newX - ballRadius <= borderThickness
@@ -51,14 +50,14 @@ export function BouncingBall() {
       });
 
       setBallY((prevY) => {
-        let newY = prevY + vy.current * dt;
+        let newY = prevY + vy * dt;
 
         // Bounce off top/bottom walls
         if (
           newY - ballRadius <= borderThickness ||
           newY + ballRadius >= contentHeight - borderThickness
         ) {
-          vy.current = -vy.current;
+          vy = -vy;
           // Clamp position to stay within bounds
           newY =
             newY - ballRadius <= borderThickness
